@@ -25,10 +25,73 @@
 
       urlChanged () {
         this.path = window.decodeURIComponent(window.location.pathname);
+        var patternMatched = null;
+        var currentPage = 0;
+        var remainingPieces = this.path.split('/');
+        var pathLength = remainingPieces[remainingPieces.length - 1] === '' ? remainingPieces.length - 1 : remainingPieces.length
+
         for (var i in this.pages) {
           this.pages[i].classList.remove('page-selected')
-          if (this.pages[i].getAttribute('route') === this.path) {
-            this.pages[i].classList.add('page-selected')
+          currentPage = i;
+          var pattern = this.pages[i].getAttribute('route');
+          var patternPieces = pattern.split('/');
+          var patternLength = patternPieces[patternPieces.length - 1] === '' ? patternPieces.length - 1 : patternPieces.length;
+          var routeMatched = []
+          var namedMatches = {}
+
+          // does the match making if the path length and pattern lenght is the same
+          // or if the last part of the pattern is a *
+          if ((pathLength === patternLength) || patternPieces[patternPieces.length - 1] === '*') {
+            for (var i = 0; i < patternPieces.length; i++) {
+              var patternPiece = patternPieces[i]
+
+              // stops if the pattern piece is not existing
+              if (!patternPiece && patternPiece !== '') {
+                break
+              }
+
+              // get the left side of the path.
+              var pathPiece = remainingPieces.shift()
+
+              // stops if the left side doesn't exist
+              if (!pathPiece && pathPiece !== '') {
+                break
+              }
+
+              // push the current pattern to the route matched
+              routeMatched.push(patternPiece)
+
+              // if it has a ':', it means that the value in the current path fragment
+              // should be put in the variable that has the name after the ':'
+              if (patternPiece.charAt(0) === ':') {
+                namedMatches[patternPiece.slice(1)] = pathPiece
+
+              // if it is a '*', it means that it should accept all paths that has
+              // a prefix of the route matched
+              } else if (patternPiece === '*') {
+                patternMatched = routeMatched.join('/')
+
+              // the pattern piece and the path piece doesn't match, go to next route pattern
+              } else if (patternPiece !== pathPiece) {
+                break
+              }
+
+              // create the pattern matched
+              patternMatched = routeMatched.join('/')
+            }
+
+            // if pattern matched is created, stop searching and change views
+            if (patternMatched) {
+              break
+            }
+          }
+        }
+
+        if (this.pages[currentPage].getAttribute('route') === patternMatched) {
+          this.pages[i].classList.add('page-selected')
+
+          for (var j in namedMatches) {
+            this.pages[currentPage].innerHTML = this.pages[currentPage].innerHTML.replace(new RegExp(':' + j, 'g'), namedMatches[j])
           }
         }
       }
