@@ -4,6 +4,16 @@
       static get is() {
         return 'app-shell'
       }
+
+      constructor() {
+        super();
+        this.pages = [];
+        for (var i = 0; i < this.children.length; i++ ) {
+          this.pages.push(this.children[i])
+        }
+
+
+      }
     }
 
     window.customElements.define(AppShell.is, AppShell)
