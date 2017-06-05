@@ -1,0 +1,11 @@
+<script>
+  (() => {
+    class AppShell extends HTMLElement {
+      static get is() {
+        return 'app-shell'
+      }
+    }
+
+    window.customElements.define(AppShell.is, AppShell)
+  })()
+</script>
