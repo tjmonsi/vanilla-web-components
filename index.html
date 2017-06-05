@@ -12,6 +12,16 @@
       body {
         margin: 0;
       }
+
+      .header {
+        border: 1px solid black;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+
+      .page {
+        padding: 10px;
+      }
     </style>
   </head>
   <body>
@@ -21,13 +31,13 @@
       <a href="/page-2">Page 2</a>
     </div>
     <app-shell>
-      <div id="home">
+      <div id="home" class="page">
         Home page
       </div>
-      <div id="page-1">
+      <div id="page-1" class="page">
         Page 1 page
       </div>
-      <div id="page-2">
+      <div id="page-2" class="page">
         Page 2 page
       </div>
     </app-shell>
