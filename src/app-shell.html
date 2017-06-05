@@ -11,24 +11,125 @@
         for (var i = 0; i < this.children.length; i++ ) {
           this.pages.push(this.children[i])
         }
+        this.__boundGlobalOnClick = this._globalOnClick.bind(this);
       }
 
       connectedCallback() {
+        window.document.body.addEventListener('click', this.__boundGlobalOnClick);
         this.urlChanged();
+      }
+
+      disconnectedCallback() {
+        window.document.body.removeEventListener('click', this.__boundGlobalOnClick);
       }
 
       urlChanged () {
         this.path = window.decodeURIComponent(window.location.pathname);
-
         for (var i in this.pages) {
           this.pages[i].classList.remove('page-selected')
           if (this.pages[i].getAttribute('route') === this.path) {
             this.pages[i].classList.add('page-selected')
           }
         }
-
-
       }
+
+      _globalOnClick(event) {
+        // If another event handler has stopped this event then there's nothing
+        // for us to do. This can happen e.g. when there are multiple
+        // iron-location elements in a page.
+        if (event.defaultPrevented) {
+          return;
+        }
+        var href = this._getSameOriginLinkHref(event);
+        if (!href) {
+          return;
+        }
+        event.preventDefault();
+
+        // If the navigation is to the current page we shouldn't add a history
+        // entry or fire a change event.
+        if (href === window.location.href) {
+          return;
+        }
+        window.history.pushState({}, '', href);
+        this.urlChanged();
+      }
+
+      _getSameOriginLinkHref(event) {
+        // We only care about left-clicks.
+        if (event.button !== 0) {
+          return null;
+        }
+
+        // We don't want modified clicks, where the intent is to open the page
+        // in a new tab.
+        if (event.metaKey || event.ctrlKey) {
+          return null;
+        }
+
+        // http://stackoverflow.com/questions/39245488/event-path-undefined-with-firefox-and-vue-js
+        var eventPath = event.path || (event.composedPath && event.composedPath());
+        var anchor = null;
+        for (var i = 0; i < eventPath.length; i++) {
+          var element = eventPath[i];
+          if (element.tagName === 'A' && element.href) {
+            anchor = element;
+            break;
+          }
+        }
+
+        // If there's no link there's nothing to do.
+        if (!anchor) {
+          return null;
+        }
+
+        // Target blank is a new tab, don't intercept.
+        if (anchor.target === '_blank') {
+          return null;
+        }
+
+        // If the link is for an existing parent frame, don't intercept.
+        if ((anchor.target === '_top' ||
+            anchor.target === '_parent') &&
+            window.top !== window) {
+          return null;
+        }
+        var href = anchor.href;
+
+        // It only makes sense for us to intercept same-origin navigations.
+        // pushState/replaceState don't work with cross-origin links.
+        var url;
+        if (window.document.baseURI != null) {
+          url = new URL(href, /** @type {string} */(window.document.baseURI));
+        } else {
+          url = new URL(href);
+        }
+        var origin;
+
+        // IE Polyfill
+        if (window.location.origin) {
+          origin = window.location.origin;
+        } else {
+          origin = window.location.protocol + '//' + window.location.hostname;
+          if (window.location.port) {
+            origin += ':' + window.location.port;
+          }
+        }
+        if (url.origin !== origin) {
+          return null;
+        }
+        var normalizedHref = url.pathname + url.search + url.hash;
+
+        // If we've been configured not to handle this url... don't handle it!
+        if (this._urlSpaceRegExp && !this._urlSpaceRegExp.test(normalizedHref)) {
+          return null;
+        }
+        // Need to use a full URL in case the containing page has a base URI.
+        var fullNormalizedHref = new URL(normalizedHref, window.location.href).href;
+        return fullNormalizedHref;
+      }
+
+
     }
 
     window.customElements.define(AppShell.is, AppShell)
