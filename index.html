@@ -1,0 +1,35 @@
+html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>Vanilla Web Components</title>
+    <meta name="description" content="vanilla web components description">
+
+    <link rel="import" href="/src/app-shell.html">
+
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <a href="/">Home</a>
+      <a href="/page-1">Page 1</a>
+      <a href="/page-2">Page 2</a>
+    </div>
+    <app-shell>
+      <div id="home">
+        Home page
+      </div>
+      <div id="page-1">
+        Page 1 page
+      </div>
+      <div id="page-2">
+        Page 2 page
+      </div>
+    </app-shell>
+  </body>
+</html>
