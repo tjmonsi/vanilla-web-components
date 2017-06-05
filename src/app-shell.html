@@ -14,6 +14,19 @@
       }
 
       connectedCallback() {
+        this.urlChanged();
+      }
+
+      urlChanged () {
+        this.path = window.decodeURIComponent(window.location.pathname);
+
+        for (var i in this.pages) {
+          this.pages[i].classList.remove('page-selected')
+          if (this.pages[i].getAttribute('route') === this.path) {
+            this.pages[i].classList.add('page-selected')
+          }
+        }
+
 
       }
     }
