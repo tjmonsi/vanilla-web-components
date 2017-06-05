@@ -21,6 +21,7 @@
 
       .page {
         padding: 10px;
+        display: none;
       }
     </style>
   </head>
@@ -31,13 +32,13 @@
       <a href="/page-2">Page 2</a>
     </div>
     <app-shell>
-      <div id="home" class="page">
+      <div route="/" class="page">
         Home page
       </div>
-      <div id="page-1" class="page">
+      <div route="page-1" class="page">
         Page 1 page
       </div>
-      <div id="page-2" class="page">
+      <div route="page-2" class="page">
         Page 2 page
       </div>
     </app-shell>
