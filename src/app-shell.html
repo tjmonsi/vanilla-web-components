@@ -96,7 +96,8 @@
           this.pages[currentPage].classList.add('page-selected')
 
           for (var j in namedMatches) {
-            this.pages[currentPage].innerHTML = this.pages[currentPage].innerHTML.replace(new RegExp(':' + j, 'g'), namedMatches[j])
+            this.pages[currentPage][j] = namedMatches[j]
+            // this.pages[currentPage].innerHTML = this.pages[currentPage].innerHTML.replace(new RegExp(':' + j, 'g'), namedMatches[j])
           }
         }
       }
