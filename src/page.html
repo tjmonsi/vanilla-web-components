@@ -3,11 +3,49 @@
     window.VanillaMixins = window.VanillaMixins || {};
     window.VanillaMixins.Page = (superClass) => {
       return class extends superClass {
+        static get template() {
+          return document.currentScript.ownerDocument.querySelector('#' + this.is).innerHTML
+        }
+        
         constructor() {
           super();
-          this.template = document.currentScript.ownerDocument.querySelector('#' + this.constructor.is).innerHTML
+          this.template = this.constructor.template
           this.shadow = this.attachShadow({mode: 'open'});
-          this.shadow.innerHTML = this.template
+          this.shadow.innerHTML = this.template;
+          
+          var props = [];
+          
+          for (var i = 0; i < this.attributes.length; i++) {
+            props.push({
+              name: this.attributes[i].name,
+              value: this.attributes[i].value
+            })
+          } 
+          
+          if (this.constructor.properties) {
+            for (var i = 0; i < this.constructor.properties.length; i++) {
+              props.push({
+                name: i,
+                value: this.constructor.properties[i].value
+              })
+            }  
+          }
+          
+          
+          console.log(this.constructor.is, this.constructor.properties, props)
+          
+          for (var i = 0; i < props.length; i++) {
+            var shadow = this.shadow;
+            var template = this.template;
+            var name = props[i].name
+            Object.defineProperty(this, name, {
+              set: function (val) {
+                console.log(name)
+                shadow.innerHTML = template.replace(new RegExp(':' + name, 'g'), val)  
+              }
+            })
+            this[props[i].name] = props[i].value
+          }
         }
       }
     }

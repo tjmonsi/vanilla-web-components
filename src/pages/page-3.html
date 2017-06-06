@@ -8,13 +8,11 @@
   (() => {
     class PageThree extends window.VanillaMixins.Page(HTMLElement) {
       static get is() { return 'page-three' }
-      constructor() {
-        super();
-        this.id = this.getAttribute('id')
-      }
       
-      set id(id) {
-        this.shadow.innerHTML = this.template.replace(new RegExp(':id', 'g'), id)
+      static get properties() {
+        return {
+          id: String
+        }
       }
     }
     
