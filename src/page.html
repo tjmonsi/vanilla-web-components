@@ -1,0 +1,15 @@
+<script>
+  (() => {
+    window.VanillaMixins = window.VanillaMixins || {};
+    window.VanillaMixins.Page = (superClass) => {
+      return class extends superClass {
+        constructor() {
+          super();
+          this.template = document.currentScript.ownerDocument.querySelector('#' + this.constructor.is).innerHTML
+          this.shadow = this.attachShadow({mode: 'open'});
+          this.shadow.innerHTML = this.template
+        }
+      }
+    }
+  })()
+</script>
