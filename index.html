@@ -8,6 +8,9 @@
 
     <link rel="import" href="/src/app-shell.html">
     <link rel="import" href="/src/pages/home-page.html">
+    <link rel="import" href="/src/pages/page-1.html">
+    <link rel="import" href="/src/pages/page-2.html">
+    <link rel="import" href="/src/pages/page-3.html">
 
     <style>
       body {
@@ -20,7 +23,7 @@
         margin-bottom: 10px;
       }
 
-      .page {
+      app-shell > * {
         padding: 10px;
         display: none;
       }
@@ -39,18 +42,11 @@
       <a href="/page-3/and-some-other">And Some Other</a>
     </div>
     <app-shell>
-      <div route="/" class="page">
-        Home page
-      </div>
-      <div route="/page-1" class="page">
-        Page 1 page
-      </div>
-      <div route="/page-2" class="page">
-        Page 2 page
-      </div>
-      <div route="/page-3/:id" class="page">
-        Pattern: :id :id
-      </div>
+      <home-page route="/"></home-page>
+      <page-one route="/page-1"></page-one>
+      <page-two route="/page-2"></page-two>
+      <page-three route="/page-3/:id"></page-three>
+      
     </app-shell>
   </body>
 </html>

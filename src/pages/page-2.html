@@ -1,0 +1,19 @@
+<template id="page-two">
+  Page 2 page
+</template>
+
+<script>
+  (() => {
+    class PageTwo extends HTMLElement {
+      static get is() { return 'page-two' }
+      constructor() {
+        super();
+        this.template = document.currentScript.ownerDocument.querySelector('#page-two').innerHTML
+        this.shadow = this.attachShadow({mode: 'open'});
+        this.shadow.innerHTML = this.template
+      }
+    }
+    
+    window.customElements.define(PageTwo.is, PageTwo)
+  })();
+</script>
