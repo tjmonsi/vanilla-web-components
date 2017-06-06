@@ -1,17 +1,13 @@
+<link rel="import" href="../page.html">
+
 <template id="page-one">
   Page 1 page
 </template>
 
 <script>
   (() => {
-    class PageOne extends HTMLElement {
+    class PageOne extends window.VanillaMixins.Page(HTMLElement) {
       static get is() { return 'page-one' }
-      constructor() {
-        super();
-        this.template = document.currentScript.ownerDocument.querySelector('#page-one').innerHTML
-        this.shadow = this.attachShadow({mode: 'open'});
-        this.shadow.innerHTML = this.template
-      }
     }
     
     window.customElements.define(PageOne.is, PageOne)

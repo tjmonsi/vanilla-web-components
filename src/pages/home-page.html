@@ -1,17 +1,13 @@
+<link rel="import" href="../page.html">
+
 <template id="home-page">
   Home page
 </template>
 
 <script>
   (() => {
-    class HomePage extends HTMLElement {
+    class HomePage extends window.VanillaMixins.Page(HTMLElement) {
       static get is() { return 'home-page' }
-      constructor() {
-        super();
-        this.template = document.currentScript.ownerDocument.querySelector('#home-page').innerHTML
-        this.shadow = this.attachShadow({mode: 'open'});
-        this.shadow.innerHTML = this.template
-      }
     }
     
     window.customElements.define(HomePage.is, HomePage)
