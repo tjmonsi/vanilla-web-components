@@ -1,3 +1,5 @@
+
+
 <script>
   (() => {
     class AppShell extends HTMLElement {
@@ -27,24 +29,27 @@
         this.path = window.decodeURIComponent(window.location.pathname);
         var patternMatched = null;
         var currentPage = 0;
-        var remainingPieces = this.path.split('/');
-        var pathLength = remainingPieces[remainingPieces.length - 1] === '' ? remainingPieces.length - 1 : remainingPieces.length
+
+        for (var k in this.pages) {
+          this.pages[k].classList.remove('page-selected')
+        }
 
         for (var i in this.pages) {
-          this.pages[i].classList.remove('page-selected')
           currentPage = i;
           var pattern = this.pages[i].getAttribute('route');
           var patternPieces = pattern.split('/');
           var patternLength = patternPieces[patternPieces.length - 1] === '' ? patternPieces.length - 1 : patternPieces.length;
+          var remainingPieces = this.path.split('/');
+          var pathLength = remainingPieces[remainingPieces.length - 1] === '' ? remainingPieces.length - 1 : remainingPieces.length
           var routeMatched = []
           var namedMatches = {}
 
-          // does the match making if the path length and pattern lenght is the same
+          // does the match making if the path length and pattern length is the same
           // or if the last part of the pattern is a *
           if ((pathLength === patternLength) || patternPieces[patternPieces.length - 1] === '*') {
-            for (var i = 0; i < patternPieces.length; i++) {
-              var patternPiece = patternPieces[i]
-
+            for (var j = 0; j < patternPieces.length; j++) {
+              var patternPiece = patternPieces[j]
+              
               // stops if the pattern piece is not existing
               if (!patternPiece && patternPiece !== '') {
                 break
@@ -86,7 +91,7 @@
             }
           }
         }
-
+        
         if (this.pages[currentPage].getAttribute('route') === patternMatched) {
           this.pages[currentPage].classList.add('page-selected')
 
